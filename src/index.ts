@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
-import { env } from "./env";
-import { logger } from "./logger";
+import { env } from "./configs/env";
+import { logger } from "./utils/logger";
 
 const app = express();
 
