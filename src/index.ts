@@ -4,6 +4,10 @@ import helmet from "helmet";
 import { env } from "./configs/env";
 import authRoutes from "./modules/auth/auth.routes";
 import categoryRoutes from "./modules/category/category.routes";
+import {
+  userGroceryRouter as userGroceryRoutes,
+  adminGroceryRouter as adminGroceryRoutes,
+} from "./modules/grocery/grocery.routes";
 import { logger } from "./utils/logger";
 
 const app = express();
@@ -18,6 +22,8 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/grocery-items", userGroceryRoutes);
+app.use("/admin/grocery-items", adminGroceryRoutes);
 
 app.listen(env.PORT, () => {
   logger.info(`Server running on http://localhost:${env.PORT}`);
