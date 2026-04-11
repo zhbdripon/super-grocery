@@ -2,8 +2,9 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { env } from "./configs/env";
-import { logger } from "./utils/logger";
 import authRoutes from "./modules/auth/auth.routes";
+import categoryRoutes from "./modules/category/category.routes";
+import { logger } from "./utils/logger";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/categories", categoryRoutes);
 
 app.listen(env.PORT, () => {
   logger.info(`Server running on http://localhost:${env.PORT}`);
