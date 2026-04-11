@@ -1,50 +1,9 @@
 import { db } from "./index.js";
-import { users, categories, groceryItems } from "./schema/index.js";
-import { hashPassword } from "../utils/password.js";
+import { categories, groceryItems } from "./schema/index.js";
 import { logger } from "../utils/logger.js";
 
 async function seed() {
   logger.info("🌱 Seeding database...");
-
-  // ─── Admin user ───
-  const adminPassword = await hashPassword("admin123");
-  const [admin] = await db
-    .insert(users)
-    .values({
-      name: "Admin User",
-      email: "admin@grocery.com",
-      hashedPassword: adminPassword,
-      role: "admin",
-      emailVerified: true,
-    })
-    .onConflictDoNothing({ target: users.email })
-    .returning();
-
-  if (admin) {
-    logger.info(`✅ Admin user created: ${admin.email}`);
-  } else {
-    logger.info("ℹ️  Admin user already exists");
-  }
-
-  // ─── Demo user ───
-  const userPassword = await hashPassword("user123");
-  const [demoUser] = await db
-    .insert(users)
-    .values({
-      name: "Demo User",
-      email: "user@grocery.com",
-      hashedPassword: userPassword,
-      role: "user",
-      emailVerified: true,
-    })
-    .onConflictDoNothing({ target: users.email })
-    .returning();
-
-  if (demoUser) {
-    logger.info(`✅ Demo user created: ${demoUser.email}`);
-  } else {
-    logger.info("ℹ️  Demo user already exists");
-  }
 
   // ─── Categories ───
   const categoryData = [
