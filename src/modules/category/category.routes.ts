@@ -9,31 +9,35 @@ import {
   updateCategorySchema,
 } from "./category.validation.js";
 
-const router = Router();
+// non-admin routes
+const userCategoryRouter = Router();
+userCategoryRouter.use(authenticate);
 
-router.use(authenticate);
+userCategoryRouter.get("/", asyncHandler(categoryController.findAll));
+userCategoryRouter.get("/:id", asyncHandler(categoryController.findById));
 
-router.get("/", asyncHandler(categoryController.findAll));
-router.get("/:id", asyncHandler(categoryController.findById));
+// admin routes
+const adminCategoryRouter = Router();
+adminCategoryRouter.use(authenticate, authorize("admin"));
 
-router.post(
+adminCategoryRouter.post(
   "/",
-  authorize("admin"),
   validate(createCategorySchema),
   asyncHandler(categoryController.create),
 );
 
-router.patch(
+adminCategoryRouter.patch(
   "/:id",
   validate(updateCategorySchema),
-  authorize("admin"),
   asyncHandler(categoryController.update),
 );
 
-router.delete(
+adminCategoryRouter.delete(
   "/:id",
-  authorize("admin"),
   asyncHandler(categoryController.remove),
 );
 
-export default router;
+export {
+  userCategoryRouter as categoryRoutes,
+  adminCategoryRouter as adminCategoryRoutes,
+};

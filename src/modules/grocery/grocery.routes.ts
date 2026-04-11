@@ -6,11 +6,11 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import { groceryController } from "./grocery.controller.js";
 import {
   createGroceryItemSchema,
-  updateGroceryItemSchema
+  updateGroceryItemSchema,
 } from "./grocery.validation.js";
 
 // admin route
-export const adminGroceryRouter = Router();
+const adminGroceryRouter = Router();
 adminGroceryRouter.use(authenticate, authorize("admin"));
 
 adminGroceryRouter.get("/", asyncHandler(groceryController.findAll));
@@ -27,8 +27,8 @@ adminGroceryRouter.patch(
 );
 adminGroceryRouter.delete("/:id", asyncHandler(groceryController.remove));
 
-// none admin route
-export const userGroceryRouter = Router();
+// non-admin route
+const userGroceryRouter = Router();
 userGroceryRouter.use(authenticate, authorize("user", "admin"));
 
 userGroceryRouter.get("/", asyncHandler(groceryController.findAvailable));
@@ -36,3 +36,8 @@ userGroceryRouter.get(
   "/:id",
   asyncHandler(groceryController.findAvailableById),
 );
+
+export {
+  userGroceryRouter as userGroceryRoutes,
+  adminGroceryRouter as adminGroceryRoutes,
+};
