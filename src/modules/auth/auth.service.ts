@@ -7,7 +7,7 @@ import {
     signRefreshToken,
     verifyRefreshToken,
 } from "../../utils/jwt";
-import { comparePassword, hashPassword } from "../../utils/password";
+import { verifyHash, hashData } from "../../utils/password";
 import { LoginInput, RegisterInput } from "./auth.validator";
 
 interface SessionMeta {
@@ -25,7 +25,7 @@ class AuthService {
       throw ApiError.conflict("User with this email already exists");
     }
 
-    const hashedPassword = await hashPassword(input.password);
+    const hashedPassword = await hashData(input.password);
 
     const newUser = await db
       .insert(users)
@@ -54,7 +54,7 @@ class AuthService {
       throw ApiError.unauthorized("Invalid email or password");
     }
 
-    const valid = await comparePassword(input.password, user.hashedPassword);
+    const valid = await verifyHash(input.password, user.hashedPassword);
     if (!valid) {
       throw ApiError.unauthorized("Invalid email or password");
     }
@@ -80,7 +80,7 @@ class AuthService {
       sessionId: session.id,
     });
 
-    const hashedRefresh = await hashPassword(refreshToken);
+    const hashedRefresh = await hashData(refreshToken);
     await db
       .update(userSessions)
       .set({ refreshToken: hashedRefresh })
@@ -118,7 +118,7 @@ class AuthService {
       throw ApiError.unauthorized("Session not found");
     }
 
-    const valid = await comparePassword(refreshToken, session.refreshToken);
+    const valid = await verifyHash(refreshToken, session.refreshToken);
 
     if (!valid) {
       await db.delete(userSessions).where(eq(userSessions.id, session.id));
@@ -133,7 +133,7 @@ class AuthService {
     const newAccessToken = signAccessToken(newTokenPayload);
     const newRefreshToken = signRefreshToken(newTokenPayload);
 
-    const hashedRefresh = await hashPassword(newRefreshToken);
+    const hashedRefresh = await hashData(newRefreshToken);
     await db
       .update(userSessions)
       .set({

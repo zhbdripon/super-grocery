@@ -2,7 +2,7 @@ import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { db } from "./index.js";
 import { users } from "./schema/index.js";
-import { hashPassword } from "../utils/password.js";
+import { hashData } from "../utils/password.js";
 import { logger } from "../utils/logger.js";
 import { eq } from "drizzle-orm";
 
@@ -69,7 +69,7 @@ async function createAdmin() {
 
     rl.close();
 
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashData(password);
 
     const [admin] = await db
       .insert(users)
