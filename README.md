@@ -33,6 +33,12 @@ A RESTful Grocery Booking System built with **Express 5**, **TypeScript**, **Dri
 
 ---
 
+## ER Diagram
+
+- [Database ER Diagram (dbdiagram.io)](https://dbdiagram.io/d/Super-Grocery-69d90efa0f7c9ef2c0c9d236)
+
+---
+
 ## System Requirements
 
 | Requirement      | Version        |
