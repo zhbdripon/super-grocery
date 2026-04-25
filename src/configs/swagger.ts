@@ -1,4 +1,19 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import path from "node:path";
+
+const cwd = process.cwd();
+const parentCwd = path.resolve(cwd, "..");
+
+const apiDocFiles = [
+  path.join(cwd, "src/modules/**/*.routes.ts"),
+  path.join(cwd, "src/modules/**/*.routes.js"),
+  path.join(cwd, "dist/modules/**/*.routes.js"),
+  path.join(cwd, "dist/src/modules/**/*.routes.js"),
+  path.join(parentCwd, "src/modules/**/*.routes.ts"),
+  path.join(parentCwd, "src/modules/**/*.routes.js"),
+  path.join(parentCwd, "dist/modules/**/*.routes.js"),
+  path.join(parentCwd, "dist/src/modules/**/*.routes.js"),
+];
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -14,13 +29,8 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: "http://localhost:{port}",
-        description: "Development server",
-        variables: {
-          port: {
-            default: "3000",
-          },
-        },
+        url: "http://localhost:3000",
+        description: "Local development server",
       },
     ],
     components: {
@@ -439,7 +449,7 @@ const options: swaggerJsdoc.Options = {
       { name: "Orders", description: "Place and view orders" },
     ],
   },
-  apis: ["./src/modules/**/*.routes.ts"],
+  apis: apiDocFiles,
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
